@@ -1,0 +1,113 @@
+import type { BuildCommand, EnvironmentVariables, HeaderRule } from './types'; // Assuming custom types are defined in a separate file
+
+interface CacheStrategy {
+    matchPattern: string;
+    expirationTime?: number; // In seconds
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvironmentVariables;
+  headers: Array<HeaderRule>;
+  redirects: Array<{source: string; destination: string; statusCode: number}>;
+  cacheStrategies: Array<CacheStrategy>;
+  frameworkSettings: { [key: string]: any };
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: 'next build',
+    output: '.next'
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    DATABASE_URL: process.env.DATABASE_URL
+  },
+  headers: [
+    {
+      source: '/(.*)',
+      headers: [
+        { key: 'X-DNS-Prefetch-Control', value: 'on' },
+        { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' }
+      ]
+    }
+  ],
+  redirects: [
+    {
+      source: '/old-url',
+      destination: '/',
+      statusCode: 301
+    }
+  ],
+  cacheStrategies: [
+    {
+      matchPattern: '/*.+(js|css|png|jpg)',
+      expirationTime: 60 * 60 * 24 // Cache for 1 day
+    },
+    {
+      matchPattern: '/api/*',
+      expirationTime: 60 * 5 // Cache API responses for 5 minutes
+    }
+  ],
+  frameworkSettings: {
+    vercel: { buildCommand: 'next build', startCommand: 'next start' },
+    netlify: { buildContext: 'production' }
+  }
+};
+
+import type { BuildCommand, EnvironmentVariables, HeaderRule } from './types'; // Assuming custom types are defined in a separate file
+
+interface CacheStrategy {
+    matchPattern: string;
+    expirationTime?: number; // In seconds
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvironmentVariables;
+  headers: Array<HeaderRule>;
+  redirects: Array<{source: string; destination: string; statusCode: number}>;
+  cacheStrategies: Array<CacheStrategy>;
+  frameworkSettings: { [key: string]: any };
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: 'next build',
+    output: '.next'
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    DATABASE_URL: process.env.DATABASE_URL
+  },
+  headers: [
+    {
+      source: '/(.*)',
+      headers: [
+        { key: 'X-DNS-Prefetch-Control', value: 'on' },
+        { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' }
+      ]
+    }
+  ],
+  redirects: [
+    {
+      source: '/old-url',
+      destination: '/',
+      statusCode: 301
+    }
+  ],
+  cacheStrategies: [
+    {
+      matchPattern: '/*.+(js|css|png|jpg)',
+      expirationTime: 60 * 60 * 24 // Cache for 1 day
+    },
+    {
+      matchPattern: '/api/*',
+      expirationTime: 60 * 5 // Cache API responses for 5 minutes
+    }
+  ],
+  frameworkSettings: {
+    vercel: { buildCommand: 'next build', startCommand: 'next start' },
+    netlify: { buildContext: 'production' }
+  }
+};
